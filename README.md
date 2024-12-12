@@ -10,12 +10,9 @@ OneNet is a stability based network inference aggregation method from
 whole metagenome sequencing data, which aims at fostering
 reproducibility and precision.
 
-License: MIT + file LICENSE
-
 ## Installation
 
-You can install OneNet from the [forgemia gitlab](metagenopolis/OneNet)
-with:
+You can install OneNet from the github repository with:
 
 ``` r
 remotes::install_github(repo = "metagenopolis/OneNet")
