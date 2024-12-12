@@ -1,0 +1,68 @@
+Package: OneNet
+Title: Aggregating network inference methods for the identification of microbial guilds
+Version: 0.2.1
+Authors@R: c(
+  person(given = "Camille", family = "Champion", role = c("aut"),
+         email = "camille.champion@u-paris.fr"), 
+  person(given = "Mathilde", family = "Sola", role = c("aut"),
+         email = "mathilde.sola@inrae.fr"), 
+  person(given = "Raphaëlle", family = "Momal", role = c("aut", "cre"),
+         email = "raphaelle.momal@inrae.fr"), 
+  person(given = "Mahendra", family = "Mariadassou", role = c("ctb"),
+         email = "mahendra.mariadassou@inrae.fr", comment = c(ORCID = "0000-0003-2986-354X"))
+  )
+Description: OneNet is a stability based network inference aggregation method from whole metagenome sequencing data, which aims at fostering reproducibility and precision.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown,
+    kableExtra,
+    xlsx,
+    readxl,
+    stringr,
+    rlang
+VignetteBuilder: knitr
+Roxygen: list(markdown =TRUE)
+RoxygenNote: 7.3.1
+LinkingTo: 
+    RcppArmadillo, RcppEigen, Rcpp
+Depends:
+    R (>= 3.5.0), 
+    ggplot2,
+    SpiecEasi (>= 1.1.1)
+biocViews:
+Imports: 
+    SPRING,
+    EMtree,
+    rMAGMA,
+    PLNmodels,
+    Rfit,
+    ggm,
+    dplyr,
+    grDevices,
+    huge,
+    magrittr,
+    mixedCCA,
+    parallel,
+    pulsar,
+    reshape2,
+    tibble,
+    blockmodels,
+    igraph,
+    tidygraph,
+    ggraph,
+    ggiraph,
+    mvtnorm,
+    stats,
+    utils,
+    RColorBrewer,
+    Rcpp, 
+    future
+Remotes: 
+    github::GraceYoon/SPRING,
+    github::Rmomal/EMtree,
+    gitlab::arcgl/rmagma,
+    github::zdk123/SpiecEasi
+
