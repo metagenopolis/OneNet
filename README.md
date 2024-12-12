@@ -18,15 +18,7 @@ You can install OneNet from the [forgemia gitlab](metagenopolis/OneNet)
 with:
 
 ``` r
-remotes::install_gitlab(repo = "metagenopolis/OneNet", 
-                        host = "forgemia.inra.fr")
-```
-
-Or the development version with
-
-``` r
-remotes::install_gitlab(repo = "metagenopolis/OneNet@dev", 
-                        host = "forgemia.inra.fr")
+remotes::install_github(repo = "metagenopolis/OneNet")
 ```
 
 ## Liver data set
@@ -42,14 +34,26 @@ This package includes a data set “liver”, which contains
 
 ``` r
 library(OneNet)
+#> Le chargement a nécessité le package : ggplot2
+#> Le chargement a nécessité le package : SpiecEasi
+#> Registered S3 methods overwritten by 'lava':
+#>   method    from
+#>   plot.sim  huge
+#>   print.sim huge
 ## basic example code
 data("liver")
 str(liver, max.level=1)
-#> List of 5
-#>  $ abundances  : chr [1:1990, 1:238] "msp_0001" "msp_0002" "msp_0003" "msp_0004" ...
+#> List of 9
+#>  $ abundances     :'data.frame': 1990 obs. of  217 variables:
+#>  $ taxonomy       :'data.frame': 1990 obs. of  3 variables:
+#>   ..- attr(*, "na.action")= 'omit' Named int 1991
+#>   .. ..- attr(*, "names")= chr "health_status"
+#>  $ meta           :'data.frame': 216 obs. of  1 variable:
+#>  $ infer_prev90   :List of 7
+#>  $ counts_prev_ill: num [1:114, 1:122] 275 0 4487 11 7 ...
 #>   ..- attr(*, "dimnames")=List of 2
-#>  $ metadata    : tibble [222 × 27] (S3: tbl_df/tbl/data.frame)
-#>  $ infer_prev50:List of 7
-#>  $ infer_prev90:List of 7
-#>  $ taxonomy    :'data.frame':    1990 obs. of  21 variables:
+#>  $ infer_prev_ill :List of 7
+#>  $ aggreg_ill     :'data.frame': 7381 obs. of  4 variables:
+#>  $ msp_set_50     : chr [1:122] "msp_0003" "msp_0005" "msp_0007" "msp_0008" ...
+#>  $ msp_set_90     : chr [1:26] "msp_0005" "msp_0007" "msp_0010" "msp_0011" ...
 ```

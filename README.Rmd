@@ -27,15 +27,7 @@ License: MIT + file LICENSE
 You can install OneNet from the [forgemia gitlab](metagenopolis/OneNet) with:
 
 ```{r install, eval=FALSE}
-remotes::install_gitlab(repo = "metagenopolis/OneNet", 
-                        host = "forgemia.inra.fr")
-```
-
-Or the development version with 
-
-```{r install-dev, eval=FALSE}
-remotes::install_gitlab(repo = "metagenopolis/OneNet@dev", 
-                        host = "forgemia.inra.fr")
+remotes::install_github(repo = "metagenopolis/OneNet")
 ```
 
 ## Liver data set
