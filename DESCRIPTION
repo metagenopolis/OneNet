@@ -2,14 +2,13 @@ Package: OneNet
 Title: Aggregating network inference methods for the identification of microbial guilds
 Version: 0.3
 Authors@R: c(
-  person(given = "Camille", family = "Champion", role = c("aut"),
-         email = "camille.champion@u-paris.fr"), 
-  person(given = "Mathilde", family = "Sola", role = c("aut"),
-         email = "mathilde.sola@inrae.fr"), 
-  person(given = "Raphaëlle", family = "Momal", role = c("aut", "cre"),
-         email = "raphaelle.momal@inrae.fr"), 
-  person(given = "Mahendra", family = "Mariadassou", role = c("ctb"),
-         email = "mahendra.mariadassou@inrae.fr", comment = c(ORCID = "0000-0003-2986-354X"))
+  person(given = "Raphaëlle", family = "Momal", role = c("aut")), 
+  person(given = "Camille", family = "Champion", role = c("aut")), 
+  person(given = "Mathilde", family = "Sola", role = c("aut")), 
+  person(given = "Mahendra", family = "Mariadassou", role = c("ctb", "cre"),
+         email = "mahendra.mariadassou@inrae.fr", comment = c(ORCID = "0000-0003-2986-354X")),
+  person(given = "Magali", family = "Berland", role = c("ctb"), 
+  comment = c(ORCID = "0000-0002-6762-5350"))
   )
 Description: OneNet is a stability based network inference aggregation method from whole metagenome sequencing data, which aims at fostering reproducibility and precision.
 License: MIT + file LICENSE
