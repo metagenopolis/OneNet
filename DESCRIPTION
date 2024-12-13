@@ -62,7 +62,7 @@ Imports:
     future
 Remotes: 
     github::GraceYoon/SPRING@v1.0.4,
-    github::Rmomal/EMtree@v1.1.0,
+    github::Rmomal/EMtree@v2.0,
     gitlab::arcgl/rmagma@b6fb1911,
     github::zdk123/SpiecEasi@v1.1.3
 
