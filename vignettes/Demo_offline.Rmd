@@ -17,7 +17,6 @@ library(knitr)
 library(OneNet)
 library(kableExtra)
 library(dplyr)
-library(xlsx)
 ```
 
 # Pre-treatment
