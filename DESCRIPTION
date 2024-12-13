@@ -61,8 +61,8 @@ Imports:
     Rcpp, 
     future
 Remotes: 
-    github::GraceYoon/SPRING,
-    github::Rmomal/EMtree,
-    gitlab::arcgl/rmagma,
-    github::zdk123/SpiecEasi
+    github::GraceYoon/SPRING@v1.0.4,
+    github::Rmomal/EMtree@v1.1.0,
+    gitlab::arcgl/rmagma@v0.94,
+    github::zdk123/SpiecEasi@v1.1.3
 
