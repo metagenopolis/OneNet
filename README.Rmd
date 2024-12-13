@@ -28,19 +28,14 @@ You can install the latest version of OneNet from the with the following command
 remotes::install_github(repo = "metagenopolis/OneNet@*release")
 ```
 
-## Liver data set
+## Tutorial
 
-This package includes a data set "liver", which contains 
-
-- Abundances (semi-discrete) and metadata for a trial on healthy and liver cirrhosis patients from  [Qin et. al 2014](https://pubmed.ncbi.nlm.nih.gov/25079328/).
-- A taxonomy table.
-- Network inferences with 6 methods for a minimal species prevalence of 90% and 50%.
-
-```{r}
+A tutorial on the liver cirrhosis dataset from [Qin et. al 2014](https://pubmed.ncbi.nlm.nih.gov/25079328/) is available.
+You need to build package vignettes.
+```{r, eval=FALSE}
+remotes::install_github(repo = "metagenopolis/OneNet@*release", build_vignettes = TRUE, force=TRUE)
 library(OneNet)
-## basic example code
-data("liver")
-str(liver, max.level=1)
+vignette(package='OneNet', "Demo_offline")
 ```
 
 ## Citation
