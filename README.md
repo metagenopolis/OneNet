@@ -16,7 +16,7 @@ You can install the latest version of OneNet from the with the following
 command :
 
 ``` r
-remotes::install_github(repo = "metagenopolis/OneNet@*release"
+remotes::install_github(repo = "metagenopolis/OneNet@*release")
 ```
 
 ## Liver data set
@@ -58,7 +58,8 @@ str(liver, max.level=1)
 
 ## Citation
 
-If you find OneNet useful, please cite:  
+If you find OneNet useful, please cite:
+
 Champion C, Momal R, Le Chatelier E, Sola M, Mariadassou M, Berland M
 (2024) OneNet—One network to rule them all: Consensus network inference
 from microbiome data. PLoS Comput Biol 20(12): e1012627.
