@@ -12,10 +12,11 @@ reproducibility and precision.
 
 ## Installation
 
-You can install OneNet from the github repository with:
+You can install the latest version of OneNet from the with the following
+command :
 
 ``` r
-remotes::install_github(repo = "metagenopolis/OneNet")
+remotes::install_github(repo = "metagenopolis/OneNet@*release"
 ```
 
 ## Liver data set
@@ -54,3 +55,11 @@ str(liver, max.level=1)
 #>  $ msp_set_50     : chr [1:122] "msp_0003" "msp_0005" "msp_0007" "msp_0008" ...
 #>  $ msp_set_90     : chr [1:26] "msp_0005" "msp_0007" "msp_0010" "msp_0011" ...
 ```
+
+## Citation
+
+If you find OneNet useful, please cite:  
+Champion C, Momal R, Le Chatelier E, Sola M, Mariadassou M, Berland M
+(2024) OneNet—One network to rule them all: Consensus network inference
+from microbiome data. PLoS Comput Biol 20(12): e1012627.
+<https://doi.org/10.1371/journal.pcbi.1012627>
