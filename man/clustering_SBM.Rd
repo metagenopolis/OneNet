@@ -6,11 +6,9 @@
 \usage{
 clustering_SBM(
   edge_freq,
-  freq.thresh = 0.7,
+  freq.thresh = 0.9,
   selected_taxo,
-  force.nb.groups = NULL,
-  cores = 2,
-  as.tibble = FALSE
+  palette = palette_default()
 )
 }
 \arguments{
@@ -20,16 +18,11 @@ clustering_SBM(
 
 \item{selected_taxo}{Taxonomic information about the MGS of the data set.}
 
-\item{force.nb.groups}{Boolean to force the number of groups.}
-
-\item{cores}{Cores for parallel computing.}
-
-\item{as.tibble}{Boolean to render the value \code{species_groups} as a tibble.}
+\item{palette}{vector of colours defining the cluster palette.}
 }
 \value{
 A list containing
 \itemize{
-\item{groups_features: }{number of groups of the best partition found by SBM.}
 \item{groups: }{vector of group membership.}
 \item{species_groups: }{list (or tibble if as.tibble=TRUE) of each group's taxonomic information (name of msp, species,
 genus, and phylum).}
@@ -43,16 +36,12 @@ Perform clustering of square matrices according to Stochastic Bloc Modelling
 data("liver")
 abund<-liver$abundances
 meta<-liver$metadata
-taxo=liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9,verbatim=TRUE)$data
+taxo=liver$taxonomy \%>\% dplyr::select(msp_name, species)
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9,verbatim=TRUE)$data
 species<-liver$msp_set_90
-
 inf_90<-liver$infer_prev90
-adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
-
-taxo <- liver$taxonomy
-selected_taxo=dplyr::left_join(data.frame(msp_name=species),taxo, by="msp_name")
- norm2<-compute_aggreg_measures(adapt$freqs)$norm2
- clustering_output<-clustering_SBM(norm2, selected_taxo=selected_taxo)
+adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
+selected_taxo=dplyr::left_join(data.frame(msp_name=species), taxo, by="msp_name")
+mean<-compute_aggreg_measures(adapt$freqs)$mean
+clustering_output<-clustering_SBM(mean, selected_taxo=selected_taxo)
 }

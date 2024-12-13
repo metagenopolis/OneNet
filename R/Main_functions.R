@@ -33,8 +33,7 @@
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' count_from_table<-get_count_table(abund.table=abund,  mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)
+#' count_from_table<-get_count_table(abund.table=abund,prev.min=0.9, verbatim=FALSE)
 #' str(count_from_table)
 get_count_table<-function(abund.path=NULL,sample_id=NULL,abund.table=NULL,prev.min,verbatim=TRUE,
                           mgs=NULL){
@@ -107,8 +106,7 @@ get_count_table<-function(abund.path=NULL,sample_id=NULL,abund.table=NULL,prev.m
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo <- liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' some_inferences<-all_inferences(counts_from_table, rep.num=4)
 #' str(some_inferences, max.level=1)
 all_inferences <-function(data,edge_thresh=0.9, rep.num=100, n.levels=100,
@@ -141,11 +139,11 @@ all_inferences <-function(data,edge_thresh=0.9, rep.num=100, n.levels=100,
     res$SPRING<-output_spring
   }
   if("Magma"%in%methods){
-    output_magma=just_magma(data, rep.num, n.levels, cores, edge_thresh, Offset,covar=covar,subsample.ratio=subsample.ratio)
+    output_magma=just_magma(data, rep.num, n.levels, edge_thresh, Offset,covar=covar,subsample.ratio=subsample.ratio)
     res$Magma<-output_magma
   }
   if("EMtree"%in%methods){
-    output_EMtree=just_EMtree(data, rep.num,n.levels, cores, edge_thresh,Offset,subsample.ratio=subsample.ratio,
+    output_EMtree=just_EMtree(data, rep.num,n.levels, edge_thresh,Offset,subsample.ratio=subsample.ratio,
                               covar=covar)
     res$EMtree<-output_EMtree
   }
@@ -188,12 +186,11 @@ all_inferences <-function(data,edge_thresh=0.9, rep.num=100, n.levels=100,
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo <- liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' some_inferences<-liver$infer_prev90
-#' adapted_stab_data<-adapt_mean_stability(some_inferences, mean.stability=0.9)
-adapt_mean_stability<-function(inference_collection,mean.stability=0.9,
-                               plot=TRUE){
+#' adapted_stab_data<-adapt_mean_stability(some_inferences, mean.stability=0.8)
+adapt_mean_stability<-function(inference_collection,mean.stability=0.8,
+                               plot=FALSE){
   ne=inference_collection[[1]]$nedges
   methods<-names(inference_collection)
   #--- number of edges for mean stability
@@ -252,7 +249,6 @@ adapt_mean_stability<-function(inference_collection,mean.stability=0.9,
 #' 
 #' @details
 #' For details of the arguments used by the different methods, see the just_*() functions (e.g. [just_PLN()] and [just_EMtree()])
-#' * 
 #' 
 #' @export
 #' @importFrom SpiecEasi sparseiCov
@@ -262,8 +258,7 @@ adapt_mean_stability<-function(inference_collection,mean.stability=0.9,
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo <- liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' some_inferences<-all_inferences_new(data=counts_from_table, rep.num=4)
 #' str(some_inferences, max.level=1)
 all_inferences_new <-function(data, rep.num=100, 
@@ -277,6 +272,7 @@ all_inferences_new <-function(data, rep.num=100,
     names(res)=methods
   }else{
     res=lapply(methods, apply_method, data, rep.num,...)
+    names(res) = methods
   }
   
   return(res)

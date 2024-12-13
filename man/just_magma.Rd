@@ -8,7 +8,6 @@ just_magma(
   data,
   rep.num = 100,
   n.levels = 100,
-  cores = 1,
   edge_thresh = 0.9,
   Offset = TRUE,
   covar = NULL,
@@ -22,8 +21,6 @@ just_magma(
 \item{rep.num}{Number of subsamples.}
 
 \item{n.levels}{Size of probability grid.}
-
-\item{cores}{Number of cores for parallel computation.}
 
 \item{edge_thresh}{Threshold on selection frequencies to set the number of selected edges.}
 
@@ -51,9 +48,8 @@ data("liver")
 abund<-liver$abundances
 meta=liver$metadata
 taxo=liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
-Magma_output<-just_magma(counts_from_table, rep.num=2, cores=1)
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
+Magma_output<-just_magma(counts_from_table, rep.num=2)
 str(Magma_output, max.level=2)
 }
 }

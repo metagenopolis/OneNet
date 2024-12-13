@@ -4,7 +4,7 @@
 \alias{get_par_corr}
 \title{Wrapper for partial correlations computation}
 \usage{
-get_par_corr(edge_freq, Sigma, n, freq.thresh = 0.8)
+get_par_corr(edge_freq, Sigma, n, freq.thresh = 0.9)
 }
 \arguments{
 \item{edge_freq}{Edge final frequency, typically the result of an inference aggregation.}
@@ -27,8 +27,7 @@ abund<-liver$abundances
 meta<-liver$metadata
 taxo=liver$taxonomy
 meta=liver$metadata
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name, prev.min=0.9,
-verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 n<-nrow(counts_from_table)
 
 #first estimate Sigma thanks to SPRING model
@@ -39,9 +38,9 @@ Sigma <- mixedCCA::estimateR(qdat, type = "trunc", method = "approx",tol = 1e-6,
 # get the norme 2 aggregation from the inference using all methods, with mean stbaility 0.7
 data("liver")
 inf_90<-liver$infer_prev90
-adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
-norm2<-compute_aggreg_measures(adapt$freqs)$norm2
+adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
+mean<-compute_aggreg_measures(adapt$freqs)$mean
 
 # compute partial correlations
- ParCor<-get_par_corr(norm2,Sigma,n,freq.thresh=0.9)
+ ParCor<-get_par_corr(mean,Sigma,n,freq.thresh=0.9)
 }

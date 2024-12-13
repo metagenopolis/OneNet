@@ -18,7 +18,7 @@ Compute several aggregations: mean, norme 2, Inverse Variance Weighting (IVW), a
 \examples{
 data("liver")
 inf_90<-liver$infer_prev90
-adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
+adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
 aggreg<-compute_aggreg_measures(adapt$freqs)
 head(aggreg)
 }

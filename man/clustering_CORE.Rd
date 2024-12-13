@@ -4,7 +4,14 @@
 \alias{clustering_CORE}
 \title{Perform clustering of square matrices according to CORE-clustering}
 \usage{
-clustering_CORE(data, edge_freq, freq.thresh = 0.7, selected_taxo, min.thresh)
+clustering_CORE(
+  data,
+  edge_freq,
+  freq.thresh = 0.9,
+  selected_taxo,
+  min.thresh,
+  palette = palette_default()
+)
 }
 \arguments{
 \item{data}{Count data set.}
@@ -15,7 +22,9 @@ clustering_CORE(data, edge_freq, freq.thresh = 0.7, selected_taxo, min.thresh)
 
 \item{selected_taxo}{Taxonomic information about the MGS of the data set.}
 
-\item{min.thresh}{Minimal number of variables per cluster}
+\item{min.thresh}{Minimal number of variables per cluster.}
+
+\item{palette}{vector of colours defining the cluster palette.}
 }
 \value{
 A list containing
@@ -35,17 +44,13 @@ Perform clustering of square matrices according to CORE-clustering
 data("liver")
 abund<-liver$abundances
 meta<-liver$metadata
-taxo=liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9,verbatim=TRUE)$data
+taxo=liver$taxonomy \%>\% dplyr::select(msp_name, species)
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9,verbatim=TRUE)$data
 species<-liver$msp_set_90
-
 inf_90<-liver$infer_prev90
-adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
-
-taxo <- liver$taxonomy
+adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
 selected_taxo= dplyr::left_join(data.frame(msp_name=species),taxo, by="msp_name")
- norm2<-compute_aggreg_measures(adapt$freqs)$norm2
- clustering_output<-clustering_CORE(counts_from_table,norm2, freq.thresh=0.9,
- selected_taxo=selected_taxo,min.thresh=4)
+ mean<-compute_aggreg_measures(adapt$freqs)$mean
+ clustering_output<-clustering_CORE(counts_from_table, mean, freq.thresh=0.9,
+ selected_taxo=selected_taxo, min.thresh=3)
 }

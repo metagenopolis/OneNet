@@ -18,7 +18,6 @@ library(OneNet)
 library(kableExtra)
 library(dplyr)
 library(xlsx)
-library(RColorBrewer)
 ```
 
 # Pre-treatment
@@ -28,20 +27,18 @@ This offline version of the demo uses data stored in `liver`.
 ```{r}
 data("liver")
 abundances<-liver$abundances
-meta<-liver$metadata
-meta=liver$metadata
-taxo=liver$taxonomy
+meta<-liver$meta
+taxo=liver$taxonomy%>% dplyr::select(msp_name, species)
 ```
 
 Then, the `get_count_table()` function gives the MSP counting table of the project for a given prevalence threshold as well as the species prevalences. The role of the prevalence threshold is to avoid the presence of species that are not present enough to be correctly represented in the network. In the literature, in microbial networks, the value of 30% often comes up. The advantage of a high threshold is to shorten calculation time. In particular, this vignette requires very low calculation time, and therefore we impose a strict filter of prevalence greater than 90%.
 
-The `mgs` parameter gives the taxonomy of the species in the counting table. The `sample_id` parameter (not used here) must give the "clean" samples, these are the ones which are kept for further analyses. For example for the PRJEB6337 project, sample_id is the "SRA" meta-data variable.
+The `mgs` parameter gives the taxonomy of the species in the counting table. The `sample_id` parameter (not used here) must give the "clean" samples, these are the ones which are kept for further analyses. For example for the PRJEB6337 project, sample_id is the "health_status" meta-data variable.
 
 
 ```{r preprocessing}
 prev.min<-0.9
 counts_and_species<-get_count_table(abund.table = abundances,
-                                    mgs=taxo$msp_name, 
                                     prev.min=prev.min)
 counts<-counts_and_species$data
 species<-colnames(counts)
@@ -60,28 +57,30 @@ Two main steps:
 
 Step 1 is carried out by the `all_inferences()` function. The parameters to adjust are modeling parameters (covar and offset), resampling (`rep.num`, `n.levels`, `cores`) and edge detection (`edge_thresh`). The `seed` parameter (not used here) is also available to vary the results of the SPRING method.
 
-For this demo, we adjust the status covariate (sick “LC” or healthy “H”), with offset estimation because we start from the non-rarefied table. By default the number of resamples is set to `rep.num=100`, but here for calculation time reasons `rep.num=30`. This parameter increases the precision of calculating selection frequencies.
+For this demo, we adjust the status covariate (sick “P” or healthy “H”), with offset estimation because we start from the non-rarefied table. By default the number of resamples is set to `rep.num=100`, but here for calculation time reasons `rep.num=30`. This parameter increases the precision of calculating selection frequencies.
 
-Likewise, for inferences it is recommended to use parallelized calculation with the `cores` parameter (for example `cores=20`). By default the value is 1 to suit Windows users, and here `cores=2` to respect the rules for building a package.
+Likewise, for inferences it is recommended to use parallelized calculation with the `cores` parameter (for example `cores=2`). By default the value is 1 to suit Windows users, and here `cores=2` to respect the rules for building a package.
 
 
 ```{r inference}
 # run inference and save output in project file
-rep.num=20; n.levels=100; edge_thresh=0.9; cores=2
-inference_collection=all_inferences(data=counts,edge_thresh=edge_thresh,
-                                    rep.num = rep.num,n.levels = n.levels, cores = cores,
-                                    Offset=TRUE, covar=meta$status)
+rep.num=30; cores=2
+inference_collection=all_inferences(data=counts,
+                                    rep.num = rep.num, cores = cores,
+                                    covar=meta)
 ```
+
+
 
 ## Average stability adjustment
 
 The second step aims to adjust the stability of each method to maintain a comparable level of precision. Simulations not presented here show that the number of selected edges (or density) is an interesting intermediate quantity for finding similar levels of precision on empirical data. Consequently, the `adapt_mean_stability()` function finds the density corresponding to the average level of stability requested across all methods. The frequency vectors retained for each method are then those which best correspond to the density found.
 
-The major parameter of `adapt_mean_stability()` is `mean.stability`, which effect can be seen on the number of edges found (graph output when `plot=TRUE`). Simulations not presented here show that increasing the average stability level makes it possible to increase the level of reproducibility of the edges found. We recommend an average stability level of 90%
+The major parameter of `adapt_mean_stability()` is `mean.stability`, which effect can be seen on the number of edges found (graph output when `plot=TRUE`). Simulations not presented here show that increasing the average stability level makes it possible to increase the level of reproducibility of the edges found. We recommend an average stability level of 80%.
 
-```{r adapt_mean_stab90}
+```{r adapt_mean_stab80}
 #Adapt mean stability to get edges selection frequencies
-adapted<-adapt_mean_stability(inference_collection,mean.stability=0.9, plot=FALSE)
+adapted<-adapt_mean_stability(inference_collection, mean.stability=0.8)
 final_frequences<-adapted$freqs
 ```
 
@@ -133,20 +132,19 @@ Guild identification is done with two approaches:
 
 The `clustering_SBM()` function gives the optimal SBM clustering for scores above the threshold, and returns:
 
-* `nb_groups`: number of guilds found
 * `graph`: graph output (network)
 * `species_groups`: the species present in each group (msp identifier, species name and phyllum). In tibble form if as.tibble=TRUE.
 * `groups`: the group associated with each species (vector)
 
 ```{r, echo=FALSE}
 species=liver$msp_set_50
-aggreg_data=liver$aggreg_data50
+aggreg_data=liver$aggreg_ill
 ```
 
 ```{r, echo=FALSE}
 selected_taxo=left_join(data.frame(msp_name=species),taxo, by="msp_name")
 
-clusters=clustering_SBM(edge_freq=aggreg_data$norm2,freq.thresh=0.9,selected_taxo=selected_taxo,force.nb.groups = 3)
+clusters=clustering_SBM(edge_freq=aggreg_data$mean, selected_taxo=selected_taxo, freq.thresh = 0.8)
 
 ```
 
@@ -156,7 +154,7 @@ clusters=clustering_SBM(edge_freq=aggreg_data$norm2,freq.thresh=0.9,selected_tax
 It is possible to visualize the network obtained, weighted by the frequencies (thickness of the edges proportional to the frequencies) or by thresholding the aggregated frequencies (binary network).
 Different edge colors can be specified to spot signs of partial correlations. Likewise, the node colors make it easy to identify the groups identified by SBM.
 
-In the example below, we represent the network of edges having a selection frequency greater than 90%, and the nodes according to the identified groups (for a frequency threshold of 80%). Setting the `btw_rank` parameter to 1 allows you not to highlight nodes with a high betweenness score.
+In the example below, we represent the network of edges having a selection frequency greater than 90%, and the nodes according to the identified groups (for a frequency threshold of 80%). 
 
 
 ```{r, echo=FALSE}
@@ -164,11 +162,11 @@ clusters$graph
 ```
 
 ```{r, echo=FALSE}
-head(clusters$species_groups[[2]])
+head(clusters$species_groups[[1]])
 ```
 
 ```{r, echo=FALSE}
-head(clusters$species_groups[[2]]) %>% kbl() %>%  kable_styling()
+head(clusters$species_groups[[1]]) %>% kbl() %>%  kable_styling()
 ```
 
 
@@ -185,19 +183,15 @@ The `clustering_CORE()` function only focuses on strong communities and isolates
 
 
 ```{r, echo=FALSE}
+data_prev50 <-liver$counts_prev_ill
 species=liver$msp_set_50
-aggreg_data=liver$aggreg_data50
-
-prev.min<-0.5
-data_prev50 <-get_count_table(abund.table = abundances,
-                                    mgs=taxo$msp_name, 
-                                    prev.min=prev.min)
+aggreg_data=liver$aggreg_ill
 ```
 
 ```{r, echo=FALSE}
 selected_taxo=left_join(data.frame(msp_name=species),taxo, by="msp_name")
 
-clusters=clustering_CORE(data_prev50$data,aggreg_data$norm2, selected_taxo=selected_taxo,min.thresh=12)
+clusters=clustering_CORE(data_prev50, aggreg_data$mean, selected_taxo=selected_taxo, min.thresh=12, freq.thresh=0.8)
 
 ```
 
@@ -213,11 +207,11 @@ clusters$graph$graph_final
 ```
 
 ```{r, echo=FALSE}
-head(clusters$species_groups[[2]])
+head(clusters$species_groups[[1]])
 ```
 
 ```{r, echo=FALSE}
-head(clusters$species_groups[[2]]) %>% kbl() %>%  kable_styling()
+head(clusters$species_groups[[1]]) %>% kbl() %>%  kable_styling()
 ```
 
 

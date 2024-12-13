@@ -50,8 +50,7 @@ data("liver")
 abund<-liver$abundances
 meta=liver$metadata
 taxo <- liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 some_inferences<-all_inferences(counts_from_table, rep.num=4)
 str(some_inferences, max.level=1)
 }

@@ -4,7 +4,7 @@
 \alias{adapt_mean_stability}
 \title{Adapt mean stability}
 \usage{
-adapt_mean_stability(inference_collection, mean.stability = 0.9, plot = TRUE)
+adapt_mean_stability(inference_collection, mean.stability = 0.8, plot = FALSE)
 }
 \arguments{
 \item{inference_collection}{Collection of inferences, result from the all_inferences() function.}
@@ -32,8 +32,7 @@ data("liver")
 abund<-liver$abundances
 meta=liver$metadata
 taxo <- liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 some_inferences<-liver$infer_prev90
-adapted_stab_data<-adapt_mean_stability(some_inferences, mean.stability=0.9)
+adapted_stab_data<-adapt_mean_stability(some_inferences, mean.stability=0.8)
 }

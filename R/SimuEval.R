@@ -26,7 +26,7 @@
 #' real_data<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' count_data<-get_count_table(abund.table=real_data, mgs=taxo$msp_name,  prev.min=0.9)$data
+#' count_data<-get_count_table(abund.table=real_data,  prev.min=0.9)$data
 #' simulation<-new_synth_data(count_data, graph_type="cluster",n=50, plot=TRUE)
 #' str(simulation, max.level=1)
 #' ## Use prespecified matrix and use only part of the data
@@ -158,7 +158,7 @@ get_vec<-function(lambda,indiv_output,method){
 #' real_data<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' count_data<-get_count_table(abund.table=real_data, mgs=taxo$msp_name, prev.min=0.9)$data
+#' count_data<-get_count_table(abund.table=real_data, prev.min=0.9)$data
 #' simulation<-new_synth_data(count_data, graph_type="cluster",n=50, plot=TRUE)
 #' some_inferences<-all_inferences(simulation$counts , rep.num=4,cores=2)
 #'

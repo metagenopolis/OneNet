@@ -48,8 +48,7 @@ data("liver")
 abund<-liver$abundances
 taxo=liver$taxonomy
 meta=liver$metadata
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 PLN_output<-just_PLN(counts_from_table, rep.num=2)
 str(PLN_output, max.level=2)
 }

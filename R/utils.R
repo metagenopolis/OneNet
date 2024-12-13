@@ -174,7 +174,6 @@ stab_stars<-function(stars_output,edge_thresh=0.9){
 #' @param data Count data set.
 #' @param rep.num Number of subsamples.
 #' @param n.levels Size of probability grid.
-#' @param cores Number of cores for parallel computation.
 #' @param edge_thresh Threshold on selection frequencies to set the number of selected edges.
 #' @param Offset Vector of offsets.
 #' @param covar Covariate data set.
@@ -196,12 +195,11 @@ stab_stars<-function(stars_output,edge_thresh=0.9){
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
-#' EMtree_output<-just_EMtree(counts_from_table, rep.num=2, cores=1)
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
+#' EMtree_output<-just_EMtree(counts_from_table, rep.num=2)
 #' str(EMtree_output, max.level=2)
 #' }
-just_EMtree<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9, Offset=TRUE,
+just_EMtree<-function(data, rep.num=100, n.levels=100, edge_thresh=0.9, Offset=TRUE,
                       covar=NULL, spring=TRUE, subsample.ratio=NULL, ...){
   cat("\nEMtree...")
   t1<-Sys.time()
@@ -224,7 +222,7 @@ just_EMtree<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9,
     }
   }else{userfunction<-NULL}
 
-  resamp_EMtree<-quiet(ResampleEMtree(data,S = rep.num, cores=cores,maxIter = 100,O = Offset,covar_matrix =X,
+  resamp_EMtree<-quiet(ResampleEMtree(data,S = rep.num, cores=1,maxIter = 100,O = Offset,covar_matrix =X,
                                       user_covariance_estimation=userfunction,v = subsample.ratio))
   lambda_stab=stab_EMtree(resamp_EMtree$Pmat,n.levels,edge_thresh)
   t2<-Sys.time() ; diff=difftime(t2, t1)
@@ -235,6 +233,7 @@ just_EMtree<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9,
 #' Wrapper for SpiecEasi
 #'
 #' @inheritParams just_EMtree 
+#' @param cores Number of cores for parallel computation
 #'
 #' @return A list containing
 #'  \itemize{
@@ -252,8 +251,7 @@ just_EMtree<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9,
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' SpiecEasi_output<-just_spiec(counts_from_table, rep.num=2, cores=1)
 #' str(SpiecEasi_output, max.level=2)
 #' }
@@ -324,12 +322,11 @@ just_spiec<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9,c
 #' abund<-liver$abundances
 #' meta=liver$metadata
 #' taxo=liver$taxonomy
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
-#' Magma_output<-just_magma(counts_from_table, rep.num=2, cores=1)
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
+#' Magma_output<-just_magma(counts_from_table, rep.num=2)
 #' str(Magma_output, max.level=2)
 #' }
-just_magma<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9, Offset=TRUE,
+just_magma<-function(data, rep.num=100, n.levels=100, edge_thresh=0.9, Offset=TRUE,
                      covar=NULL, subsample.ratio=NULL,...){
   cat("\nMagma...")
   t1<-Sys.time()
@@ -345,7 +342,7 @@ just_magma<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9, 
     formula<-as.formula(string)
     X = model.matrix(formula, data=covar) }
   output=quiet(magma(data=data, distrib="ZINB",criterion.select="stars",seq_depth=seq_depth,
-                     lambda.min.ratio=1e-2,method="mb",X = X,ncores=cores,
+                     lambda.min.ratio=1e-2,method="mb",X = X,
                      stars.subsample.ratio=subsample.ratio,
                      nlambda=n.levels, rep.num=rep.num,stars.thresh=1-stability) )
   lambda_stab=stab_stars(output,edge_thresh)
@@ -359,6 +356,7 @@ just_magma<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9, 
 #'
 #' @inheritParams just_EMtree 
 #' @param seed A numeric seed for subsampling (native from the original SPRING package).
+#' @param cores Number of cores for parallel computation
 #'
 #' @return A list containing
 #'  \itemize{
@@ -376,8 +374,7 @@ just_magma<-function(data, rep.num=100, n.levels=100, cores=1, edge_thresh=0.9, 
 #' abund<-liver$abundances
 #' taxo=liver$taxonomy
 #' meta=liver$metadata
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' spring_output<-just_spring(counts_from_table, rep.num=2, cores=1)
 #' str(spring_output, max.level=2)
 #' }
@@ -475,6 +472,7 @@ resamp_ZiLN<-function(data, rep.num, n.levels,lambda.min.ratio =1e-2, cores,subs
 #' Wrapper for ZiLN
 #'
 #' @inheritParams just_EMtree 
+#' @param cores Number of cores for parallel computation
 #'
 #' @return A list containing
 #'  \itemize{
@@ -490,8 +488,7 @@ resamp_ZiLN<-function(data, rep.num, n.levels,lambda.min.ratio =1e-2, cores,subs
 #' abund<-liver$abundances
 #' taxo=liver$taxonomy
 #' meta=liver$metadata
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' ZiLN_output<-just_ZiLN(counts_from_table, rep.num=2, cores=1)
 #' str(ZiLN_output, max.level=2)
 #' }
@@ -534,8 +531,7 @@ just_ZiLN<-function(data, rep.num=100,n.levels=100, cores=1,edge_thresh=0.9, sub
 #' abund<-liver$abundances
 #' taxo=liver$taxonomy
 #' meta=liver$metadata
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' PLN_output<-just_PLN(counts_from_table, rep.num=2)
 #' str(PLN_output, max.level=2)
 #' }
@@ -583,6 +579,7 @@ just_PLN<-function(data, rep.num=100, n.levels=100,edge_thresh=0.9, Offset=TRUE,
 #'
 #' @inheritParams just_EMtree 
 #' @param lambda.seq Grid of lambda penalties.
+#' @param cores Number of cores for parallel computation
 #'
 #' @return A list containing
 #'  \itemize{
@@ -598,8 +595,7 @@ just_PLN<-function(data, rep.num=100, n.levels=100,edge_thresh=0.9, Offset=TRUE,
 #' abund<-liver$abundances
 #' taxo=liver$taxonomy
 #' meta=liver$metadata
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-#' prev.min=0.9, verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' gcoda_output<-just_gcoda(counts_from_table, rep.num=2, cores=1)
 #' str(gcoda_output, max.level=2)
 #' }
@@ -636,7 +632,7 @@ just_gcoda<-function(data, rep.num=100,n.levels=100, cores=1,edge_thresh=0.9,lam
 #' @examples
 #' data("liver")
 #' inf_90<-liver$infer_prev90
-#' adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
+#' adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
 #' aggreg<-compute_aggreg_measures(adapt$freqs)
 #' head(aggreg)
 
@@ -676,8 +672,7 @@ compute_aggreg_measures<-function(data){
 #' meta<-liver$metadata
 #' taxo=liver$taxonomy
 #' meta=liver$metadata
-#' counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name, prev.min=0.9,
-#' verbatim=FALSE)$data
+#' counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 #' n<-nrow(counts_from_table)
 #'
 #' #first estimate Sigma thanks to SPRING model
@@ -688,12 +683,12 @@ compute_aggreg_measures<-function(data){
 #' # get the norme 2 aggregation from the inference using all methods, with mean stbaility 0.7
 #' data("liver")
 #' inf_90<-liver$infer_prev90
-#' adapt<-adapt_mean_stability(inf_90, mean.stability=0.7,plot=TRUE)
-#' norm2<-compute_aggreg_measures(adapt$freqs)$norm2
+#' adapt<-adapt_mean_stability(inf_90, mean.stability=0.8,plot=TRUE)
+#' mean<-compute_aggreg_measures(adapt$freqs)$mean
 #'
 #' # compute partial correlations
-#'  ParCor<-get_par_corr(norm2,Sigma,n,freq.thresh=0.9)
-get_par_corr<-function(edge_freq,Sigma,n,freq.thresh=0.8){
+#'  ParCor<-get_par_corr(mean,Sigma,n,freq.thresh=0.9)
+get_par_corr<-function(edge_freq,Sigma,n,freq.thresh=0.9){
   Ghat_pstab=ToSym(1*edge_freq>freq.thresh)
   colnames(Ghat_pstab)=rownames(Ghat_pstab)=colnames(Sigma)=rownames(Sigma)=1:ncol(Sigma)
 

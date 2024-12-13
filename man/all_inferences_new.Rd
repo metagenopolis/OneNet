@@ -29,7 +29,6 @@ performed among "PLNnetwork","SpiecEasi","gCoda","EMtree","Magma", "ZiLN", and "
   Arguments passed on to \code{\link[=just_EMtree]{just_EMtree}}
   \describe{
     \item{\code{n.levels}}{Size of probability grid.}
-    \item{\code{cores}}{Number of cores for parallel computation.}
     \item{\code{edge_thresh}}{Threshold on selection frequencies to set the number of selected edges.}
     \item{\code{Offset}}{Vector of offsets.}
     \item{\code{covar}}{Covariate data set.}
@@ -45,15 +44,13 @@ Perform network inference with several methods
 }
 \details{
 For details of the arguments used by the different methods, see the just_*() functions (e.g. \code{\link[=just_PLN]{just_PLN()}} and \code{\link[=just_EMtree]{just_EMtree()}})
-*
 }
 \examples{
 data("liver")
 abund<-liver$abundances
 meta=liver$metadata
 taxo <- liver$taxonomy
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 some_inferences<-all_inferences_new(data=counts_from_table, rep.num=4)
 str(some_inferences, max.level=1)
 }

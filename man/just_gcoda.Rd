@@ -23,7 +23,7 @@ just_gcoda(
 
 \item{n.levels}{Size of probability grid.}
 
-\item{cores}{Number of cores for parallel computation.}
+\item{cores}{Number of cores for parallel computation}
 
 \item{edge_thresh}{Threshold on selection frequencies to set the number of selected edges.}
 
@@ -51,8 +51,7 @@ data("liver")
 abund<-liver$abundances
 taxo=liver$taxonomy
 meta=liver$metadata
-counts_from_table<-get_count_table(abund.table=abund, mgs=taxo$msp_name,
-prev.min=0.9, verbatim=FALSE)$data
+counts_from_table<-get_count_table(abund.table=abund, prev.min=0.9, verbatim=FALSE)$data
 gcoda_output<-just_gcoda(counts_from_table, rep.num=2, cores=1)
 str(gcoda_output, max.level=2)
 }

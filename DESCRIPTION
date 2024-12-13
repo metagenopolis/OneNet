@@ -1,6 +1,6 @@
 Package: OneNet
 Title: Aggregating network inference methods for the identification of microbial guilds
-Version: 0.2.1
+Version: 0.3
 Authors@R: c(
   person(given = "Camille", family = "Champion", role = c("aut"),
          email = "camille.champion@u-paris.fr"), 
@@ -49,7 +49,7 @@ Imports:
     pulsar,
     reshape2,
     tibble,
-    blockmodels,
+    sbm,
     igraph,
     tidygraph,
     ggraph,
@@ -58,6 +58,7 @@ Imports:
     stats,
     utils,
     RColorBrewer,
+    randomcoloR,
     Rcpp, 
     future
 Remotes: 
