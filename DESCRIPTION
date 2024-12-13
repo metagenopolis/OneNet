@@ -1,6 +1,6 @@
 Package: OneNet
 Title: Aggregating network inference methods for the identification of microbial guilds
-Version: 0.3
+Version: 0.3.1
 Authors@R: c(
   person(given = "Raphaëlle", family = "Momal", role = c("aut")), 
   person(given = "Camille", family = "Champion", role = c("aut")), 
